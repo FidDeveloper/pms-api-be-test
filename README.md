@@ -1,77 +1,257 @@
-# Welcome to your new ignited app!
+# Pet Management System Backend (Spring Boot)
 
-> The latest and greatest boilerplate for Infinite Red opinions
+Backend service for managing pets, customers, authentication, and related pet metadata using Spring Boot.
 
-This is the boilerplate that [Infinite Red](https://infinite.red) uses as a way to test bleeding-edge changes to our React Native stack.
+## Tech Stack
 
-- [Quick start documentation](https://github.com/infinitered/ignite/blob/master/docs/boilerplate/Boilerplate.md)
-- [Full documentation](https://github.com/infinitered/ignite/blob/master/docs/README.md)
+- Java 21
+- Spring Boot 3.4.11
+- Spring Web
+- Spring Data JPA
+- Spring Security
+- Spring Security Crypto
+- JWT (jjwt 0.11.5)
+- Spring Mail
+- MySQL (mysql-connector-java 8.0.24)
+- Lombok
+- Log4j2
+- Maven Wrapper (`mvnw` / `mvnw.cmd`)
+- Packaging: WAR (embedded Tomcat starter provided)
+
+## Project Structure
+
+```text
+PetManagementSystem_Backend_SpringBoot/
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+└── src/
+    └── main/
+        ├── java/
+        │   └── com/
+        │       └── innov/
+        │           ├── booking/
+        │           │   ├── BookingApplication.java
+        │           │   ├── GeneralException.java
+        │           │   ├── GlobalExceptionHandler.java
+        │           │   └── ServletInitializer.java
+        │           ├── config/
+        │           │   └── SecurityConfig.java
+        │           ├── constant/
+        │           │   ├── AppConstant.java
+        │           │   ├── ConfigConstant.java
+        │           │   ├── ErrorCode.java
+        │           │   └── HttpStatusCode.java
+        │           ├── controller/
+        │           │   ├── AuthenticationController.java
+        │           │   ├── CustomerLoginController.java
+        │           │   ├── PetController.java
+        │           │   └── TestController.java
+        │           ├── dto/
+        │           │   ├── AuthenticationDto.java
+        │           │   ├── CustomerDto.java
+        │           │   ├── GeneralResponse.java
+        │           │   ├── LoginDto.java
+        │           │   ├── PageDto.java
+        │           │   ├── PetConstantsDto.java
+        │           │   ├── PetDetailDto.java
+        │           │   └── TestDto.java
+        │           ├── model/
+        │           │   ├── Customer.java
+        │           │   ├── PetConstant.java
+        │           │   ├── PetDetail.java
+        │           │   └── PetMedical.java
+        │           ├── repository/
+        │           │   ├── ICustomerRepo.java
+        │           │   ├── IPetConstantRepo.java
+        │           │   ├── IPetDetailRepo.java
+        │           │   ├── IPetMedicalRepo.java
+        │           │   └── IUserRespository.java
+        │           ├── service/
+        │           │   ├── AuthenticationService.java
+        │           │   ├── CustomerService.java
+        │           │   ├── EmailService.java
+        │           │   ├── GeneralService.java
+        │           │   ├── PasswordService.java
+        │           │   ├── PetDetailService.java
+        │           │   └── UserService.java
+        │           └── utility/
+        │               ├── JwtAuthFilter.java
+        │               └── JwtService.java
+        └── resources/
+            ├── application.properties
+            └── logback-spring.xml
+```
 
 ## Getting Started
 
+### Prerequisites
+
+- Java 21
+- Maven (optional if using wrapper)
+- MySQL running locally or remotely
+
+### Run the App
+
+On macOS/Linux:
+
 ```bash
-pnpm install
-pnpm run start
+./mvnw spring-boot:run
 ```
 
-To make things work on your local simulator, or on your phone, you need first to [run `eas build`](https://github.com/infinitered/ignite/blob/master/docs/expo/EAS.md). We have many shortcuts on `package.json` to make it easier:
+On Windows:
 
 ```bash
-pnpm run build:ios:sim # build for ios simulator
-pnpm run build:ios:device # build for ios device
-pnpm run build:ios:prod # build for ios device
+mvnw.cmd spring-boot:run
 ```
 
-### `./assets`
+### Build the Project
 
-This directory is designed to organize and store various assets, making it easy for you to manage and use them in your application. The assets are further categorized into subdirectories, including `icons` and `images`:
-
-```tree
-assets
-├── icons
-└── images
+```bash
+./mvnw clean package
 ```
 
-**icons**
-This is where your icon assets will live. These icons can be used for buttons, navigation elements, or any other UI components. The recommended format for icons is PNG, but other formats can be used as well.
+## Configuration
 
-Ignite comes with a built-in `Icon` component. You can find detailed usage instructions in the [docs](https://github.com/infinitered/ignite/blob/master/docs/boilerplate/app/components/Icon.md).
+Update runtime configuration in:
 
-**images**
-This is where your images will live, such as background images, logos, or any other graphics. You can use various formats such as PNG, JPEG, or GIF for your images.
+- `src/main/resources/application.properties`
 
-Another valuable built-in component within Ignite is the `AutoImage` component. You can find detailed usage instructions in the [docs](https://github.com/infinitered/ignite/blob/master/docs/Components-AutoImage.md).
+Typical settings include:
 
-How to use your `icon` or `image` assets:
+- Database URL, username, password
+- Mail server configuration
+- JWT secret and token settings
+- Logging configuration
 
-```typescript
-import { Image } from 'react-native';
+### Environment / Property Reference
 
-const MyComponent = () => {
-  return (
-    <Image source={require('assets/images/my_image.png')} />
-  );
-};
+The project uses `application.properties` directly. For production or shared environments, move secrets to environment variables or a secret manager and inject them at runtime.
+
+| Property | Purpose | Example Value |
+| --- | --- | --- |
+| `server.address` | Bind address for the Spring Boot app | `0.0.0.0` |
+| `spring.datasource.url` | MySQL JDBC URL | `jdbc:mysql://localhost:3306/pethub` |
+| `spring.datasource.username` | Database username | `root` |
+| `spring.datasource.password` | Database password | `<DB_PASSWORD>` |
+| `spring.datasource.driver-class-name` | JDBC driver class | `com.mysql.cj.jdbc.Driver` |
+| `spring.datasource.hikari.minimum-idle` | Min idle DB connections | `5` |
+| `spring.datasource.hikari.maximum-pool-size` | Max DB pool size | `10` |
+| `spring.datasource.hikari.idle-timeout` | Idle timeout (ms) | `30000` |
+| `spring.datasource.hikari.connection-timeout` | Connection timeout (ms) | `30000` |
+| `spring.datasource.hikari.max-lifetime` | Connection max lifetime (ms) | `1800000` |
+| `spring.datasource.hikari.pool-name` | Hikari pool name | `HikariPool-1` |
+| `spring.mail.host` | SMTP host | `smtp.gmail.com` |
+| `spring.mail.port` | SMTP port | `587` |
+| `spring.mail.username` | Mail username/sender | `<MAIL_USERNAME>` |
+| `spring.mail.password` | Mail app password | `<MAIL_APP_PASSWORD>` |
+| `spring.mail.properties.mail.smtp.auth` | SMTP auth enable | `true` |
+| `spring.mail.properties.mail.smtp.starttls.enable` | STARTTLS enable | `true` |
+| `jwt.secret.access` | JWT signing secret | `<JWT_SECRET>` |
+| `logging.file.name` | Log file path | `./logs/booking.log` |
+| `logging.level.root` | Root log level | `INFO` |
+| `logging.level.com.innov.controller` | Controller package log level | `DEBUG` |
+| `logging.pattern.file` | File log format | `%d{yyyy-MM-dd HH:mm:ss} ...` |
+
+## API Endpoints
+
+Base API groups from controllers:
+
+- Authentication controller base: `/user/auth`
+- Customer/login controller base: `/api`
+- Pet controller base: `/pet`
+- Test controller base: `/test`
+
+### Authentication APIs
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/user/auth/login` | Login and return JWT token |
+| `POST` | `/user/auth/checkUserToken` | Validate token and return customer |
+
+### Customer / Login APIs
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/api/customerRegister` | Register customer profile |
+| `POST` | `/api/credentialSetup` | Setup username/credential |
+| `POST` | `/api/login` | Customer login |
+| `POST` | `/api/checkForgotPass` | Forgot-password eligibility check |
+| `POST` | `/api/forgotPassword` | Reset customer password |
+| `PATCH` | `/api/updateUser/{userId}` | Update customer info |
+| `POST` | `/api/test2` | Internal/test login helper |
+| `GET` | `/api/search` | Internal/test email trigger |
+
+### Pet APIs
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/pet/getAllPet` | Get pet constants/listing |
+| `POST` | `/pet/addPet/{id}` | Add pet for owner |
+| `POST` | `/pet/getAllPetDetails/{id}` | Paginated pet details |
+| `POST` | `/pet/addPetMedical/{ownerId}/{petId}` | Add pet medical history |
+| `GET` | `/pet/getAllPetMedical/{ownerId}` | Get all medical records by owner |
+| `GET` | `/pet/getPetMedical/{ownerId}/{petId}` | Get medical records by owner + pet |
+| `POST` | `/pet/updatePet/{ownerId}` | Update pet details |
+| `DELETE` | `/pet/deletePet/{petId}` | Delete pet |
+| `PATCH` | `/pet/updatePetMedical/{petMedicalId}` | Update pet medical record |
+| `DELETE` | `/pet/deletePetMedical/{petMedicalId}` | Delete pet medical record |
+| `GET` | `/pet/getTest` | Internal test endpoint |
+
+### Test API
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/test/getTestData` | Echo test DTO payload |
+
+### Sample Request
+
+```bash
+curl -X POST http://localhost:8080/user/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{
+        "email": "user@example.com",
+        "password": "password123"
+    }'
 ```
 
-## Running Maestro end-to-end tests
+## Docker Quickstart (MySQL + App)
 
-Follow our [Maestro Setup](https://ignitecookbook.com/docs/recipes/MaestroSetup) recipe.
+This repository now includes:
 
-## Next Steps
+- `Dockerfile` (multi-stage build: Maven build + JRE runtime)
+- `docker-compose.yml` (MySQL + backend service)
+- `.dockerignore`
 
-### Ignite Cookbook
+1. Build and run containers:
 
-[Ignite Cookbook](https://ignitecookbook.com/) is an easy way for developers to browse and share code snippets (or “recipes”) that actually work.
+```bash
+docker compose up -d --build
+```
 
-### Upgrade Ignite boilerplate
+2. Follow app logs:
 
-Read our [Upgrade Guide](https://ignitecookbook.com/docs/recipes/UpdatingIgnite) to learn how to upgrade your Ignite project.
+```bash
+docker compose logs -f app
+```
 
-## Community
+3. Stop containers:
 
-⭐️ Help us out by [starring on GitHub](https://github.com/infinitered/ignite), filing bug reports in [issues](https://github.com/infinitered/ignite/issues) or [ask questions](https://github.com/infinitered/ignite/discussions).
+```bash
+docker compose down
+```
 
-💬 Join us on [Slack](https://join.slack.com/t/infiniteredcommunity/shared_invite/zt-1f137np4h-zPTq_CbaRFUOR_glUFs2UA) to discuss.
+4. Remove containers and volumes (optional full reset):
 
-📰 Make our Editor-in-chief happy by [reading the React Native Newsletter](https://reactnativenewsletter.com/).
+```bash
+docker compose down -v
+```
+
+If your local `application.properties` has hard-coded credentials or paths, prefer replacing them with environment-variable placeholders before sharing the repository.
+
+## Main Modules
+
+- Authentication and security: JWT + Spring Security
+- Customer and login flows
+- Pet details and pet constants management
+- Shared DTO, constants, exception handling, and utility services
