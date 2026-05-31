@@ -1,21 +1,21 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: pethub-mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: pethub
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: pethub-mysql
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: pethub
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #     - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
 
   app:
     build:
@@ -30,9 +30,9 @@ services:
       - "8080:8080"
     environment:
       SERVER_ADDRESS: 0.0.0.0
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/pethub
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       LOGGING_FILE_NAME: /app/logs/booking.log
     volumes:
       - app_logs:/app/logs
